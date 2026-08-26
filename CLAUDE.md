@@ -1,3 +1,11 @@
+> ⚠️ **ПЕРЕД ЛЮБОЙ РАБОТОЙ — 3 файла:**
+> 1. `D:\saifer-ai-ops\грабли\00-СВОД-ПРАВИЛ.md` — свод граблей и приёмов всех веток;
+> 2. `D:\Saifer-AI-Workflow\РЕЕСТР-ВЕТОК.md` — кто над чем работает сейчас;
+> 3. `D:\Downloads\Рабочая-схема-веток.html` — канон.
+>
+> Узнал грабли — записал НЕМЕДЛЕННО и вшил в бриф следующего задания, до его постановки.
+> Полные правила: `D:\Saifer-AI-Workflow\ШАБЛОН-CLAUDE.md`.
+
 # OpenMontage
 
 **MANDATORY: Read [`AGENT_GUIDE.md`](AGENT_GUIDE.md) before responding to ANY user message.**

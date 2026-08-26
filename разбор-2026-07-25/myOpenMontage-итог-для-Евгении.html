@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<title>myOpenMontage — что это нам даёт (итог разбора, 25.07.2026)</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; max-width: 880px; margin: 24px auto; padding: 0 16px; color: #222; background: #fafafa; line-height: 1.5; }
+  h1 { font-size: 26px; border-bottom: 3px solid #6a5acd; padding-bottom: 8px; }
+  h2 { font-size: 20px; margin-top: 28px; color: #3a2f8f; }
+  .card { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 14px 18px; margin: 12px 0; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+  .ok { border-left: 6px solid #2e7d32; }
+  .warn { border-left: 6px solid #f9a825; }
+  .stop { border-left: 6px solid #c62828; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; }
+  th, td { border: 1px solid #ddd; padding: 7px 10px; text-align: left; font-size: 14px; }
+  th { background: #ecebfa; }
+  .muted { color: #777; font-size: 13px; }
+  code { background: #f0f0f0; padding: 1px 5px; border-radius: 4px; font-size: 13px; }
+  .big { font-size: 17px; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<h1>🎬 myOpenMontage: что это нам даёт</h1>
+<p class="muted">Итог разбора форка SaiferSMART/myOpenMontage (OpenMontage — агентная видеостудия: 12 пайплайнов, ~100 инструментов). Разбор: Grok по ТЗ, приёмка и лицензия: Claude-ScreenVideo, 25.07.2026.</p>
+
+<h2>⚖️ Сначала главное: лицензия AGPL-3.0 (проверено по файлу, не по README)</h2>
+<div class="card ok"><b>✅ Можно:</b> пользоваться как личным инструментом на своей машине (монтировать свои ролики) — сколько угодно.</div>
+<div class="card ok"><b>✅ Можно:</b> брать <b>идеи и методики</b> (форматы сценария, правила титров, подача нарратива), пересказанные своими словами и переписанные своим кодом.</div>
+<div class="card stop"><b>⛔ Нельзя:</b> копировать их код или тексты в твои продукты (боты, сайты, мини-аппы, SaaS). Иначе весь продукт обязан открыть исходники под AGPL. Это прямой конфликт с коммерцией.</div>
+<div class="card"><b>Исключение:</b> два скилла <code>manim*-best-practices</code> — MIT, их можно брать свободно.<br>
+<span class="muted">Доказательство: LICENSE = AGPL v3 с первого коммита (29.03.2026), не менялся. Снимок с хешами: <code>D:\ScreenVideo\LICENSE-снимок-myOpenMontage-2026-07-25.md</code></span></div>
+
+<h2>🏆 Топ-5 «брать в работу первыми» (всё едет на твоей машине, без GPU)</h2>
+<table>
+<tr><th>#</th><th>Пайплайн</th><th>Что даёт тебе</th></tr>
+<tr><td>1</td><td><b>clip-factory</b></td><td>Эфир → пачка коротких клипов для Shorts/Reels с хуками и субтитрами. Прямое попадание в твой контур.</td></tr>
+<tr><td>2</td><td><b>talking-head</b></td><td>Доводка записей с лицом: транскрипт, правки, русские «тикток-субтитры» по словам.</td></tr>
+<tr><td>3</td><td><b>hybrid</b></td><td>Промо: куски эфира + титры/графика + диктор ElevenLabs.</td></tr>
+<tr><td>4</td><td><b>animated-explainer</b></td><td>Анонсы/промо без лица — графика + твой TTS.</td></tr>
+<tr><td>5</td><td><b>localization-dub</b></td><td>Русские субтитры/дубляж своих роликов (без lip-sync — он требует GPU).</td></tr>
+</table>
+
+<h2>🚫 Что НЕ поедет (и не тратить время)</h2>
+<div class="card warn">Всё с пометкой <b>GPU</b>: локальная генерация видео, lip-sync, апскейл, ComfyUI — без NVIDIA-карты бессмысленно. Аватары HeyGen — платный сервис, не твой профиль. CLIP-поиск по видеокорпусу — на CPU мучительно.</div>
+
+<h2>💡 Идеи-жемчужины (переносим методом, не кодом)</h2>
+<table>
+<tr><th>Идея</th><th>Суть</th></tr>
+<tr><td><b>Locked script</b></td><td>Финальный дикторский текст «замораживается» отдельно от раскадровки — голос не плывёт от правок картинки.</td></tr>
+<tr><td><b>Дикторский текст</b></td><td>~2,5 слова/сек, числа писать «как произносить», хук за первые 3 секунды, структура Hook→Story→Proof→CTA.</td></tr>
+<tr><td><b>Русские субтитры</b></td><td>⚠️ Не брать Whisper-модели с «.en» — они ПЕРЕВОДЯТ, а не транскрибируют. Всегда <code>language=ru</code>. Группировка слов по энергии, позиции с учётом UI платформ.</td></tr>
+<tr><td><b>House style</b></td><td>Палитра+шрифты+тема объявляются ДО вёрстки; анти-шаблон «AI-дефолтов» (неоновые градиенты и т.п.).</td></tr>
+<tr><td><b>Каталог текст-эффектов</b></td><td>5–7 именованных эффектов титров под бренд вместо изобретания каждый раз.</td></tr>
+<tr><td><b>Аудио→анимация</b></td><td>Пререндер RMS/FFT из трека в JSON → пульсация графики под музыку без генеративного видео.</td></tr>
+</table>
+
+<h2>🗺️ Порядок внедрения (когда решишь пробовать)</h2>
+<div class="card">
+1. Поднять демо Remotion (без ключей) — проверка машины.<br>
+2. Прогнать один свой эфир: транскрипт ru → субтитры → 1–3 шортса (clip-factory).<br>
+3. Собрать одно промо hybrid с ElevenLabs.<br>
+4. Зафиксировать свой house style + 2 плейбука (flat — IG, clean — YouTube).<br>
+<span class="muted">Нужно на машине: Python 3.10+, ffmpeg (есть), Node 18+ (для кинетики HyperFrames — 22+). Ключи: ElevenLabs уже есть; сток Pexels/Pixabay — бесплатные.</span>
+</div>
+
+<h2>📌 Статус и хвосты</h2>
+<div class="card warn">
+• Полный разбор (301 строка): <code>D:\myOpenMontage\razbor\РАЗБОР-инвентарь.md</code> — PR #1 в наш форк <b>ждёт твоего мержа</b> (системное разрешение не дало мне смержить самому; кнопка Merge в GitHub — или скажи, я повторю).<br>
+• ⚠️ Правило для всех веток: из <code>D:\myOpenMontage</code> код и тексты в проекты <b>не копировать</b> — только смотреть и пересказывать.
+</div>
+
+<p class="muted">Файлы: этот итог — D:\ScreenVideo\myOpenMontage-итог-для-Евгении.html (копия в D:\Downloads). Клон форка: D:\myOpenMontage.</p>
+
+</body>
+</html>
